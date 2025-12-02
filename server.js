@@ -96,7 +96,14 @@ app.get('/admin/login', (req, res) => {
 });
 
 app.post('/admin/login', (req, res) => {
-  const { username, password } = req.body;
+  const username = req.body.username || req.body.login;
+  const password = req.body.password || req.body.pass;
+
+  console.log("=== DEBUG LOGIN ===");
+  console.log("Form username:", username);
+  console.log("Form password:", password);
+  console.log("ENV username:", process.env.ADMIN_USER);
+  console.log("ENV password:", process.env.ADMIN_PASS);
 
   if (
     username === process.env.ADMIN_USER &&
@@ -108,6 +115,7 @@ app.post('/admin/login', (req, res) => {
 
   res.render('admin/login', { error: 'Невірний логін або пароль' });
 });
+
 
 // Вихід
 app.get('/admin/logout', (req, res) => {
