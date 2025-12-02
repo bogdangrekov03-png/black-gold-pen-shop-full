@@ -1,6 +1,7 @@
-// ==================================================
-//                 ІМПОРТИ
-// ==================================================
+// ==============================
+//           SERVER.JS
+// ==============================
+
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -9,156 +10,146 @@ const db = require('./db');
 
 const app = express();
 
-// ==================================================
-//              НАЛАШТУВАННЯ EXPRESS
-// ==================================================
+// ==============================
+//   Налаштування шаблонів і статичних файлів
+// ==============================
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-// Сесія
+// ==============================
+//        Сесії (автентифікація)
+// ==============================
 app.use(
   session({
-    secret: 'super-secret-key',
+    secret: process.env.SESSION_SECRET || 'super_secret_key',
     resave: false,
     saveUninitialized: false,
   })
 );
 
-// ==================================================
-//              DEBUG ENVIRONMENT VARS
-// ==================================================
-console.log("=== DEBUG ENV VARS ===");
-console.log("ADMIN_USER =", process.env.ADMIN_USER);
-console.log("ADMIN_PASS =", process.env.ADMIN_PASS);
-
-// ==================================================
-//                MIDDLEWARE АДМІНА
-// ==================================================
+// ==============================
+//      Middleware для адміна
+// ==============================
 function requireAdmin(req, res, next) {
-  if (req.session && req.session.isAdmin) return next();
-  res.redirect('/admin/login');
+  if (req.session.isAdmin) return next();
+  return res.redirect('/admin/login');
 }
 
-// ==================================================
-//                  ГОЛОВНА СТОРІНКА
-// ==================================================
+// ==============================
+//           ГОЛОВНА СТОРІНКА
+// ==============================
 app.get('/', (req, res) => {
   db.get(`SELECT * FROM products LIMIT 1`, (err, product) => {
-    if (err) return res.status(500).send("Помилка бази даних");
+    if (err) return res.status(500).send('Помилка бази даних');
     res.render('index', { product });
   });
 });
 
-// ==================================================
-//                  ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
-// ==================================================
+// ==============================
+//     СТВОРЕННЯ ЗАМОВЛЕННЯ
+// ==============================
 app.post('/order', (req, res) => {
   const { name, phone, city, address, comment, quantity } = req.body;
   const qty = parseInt(quantity, 10) || 1;
 
   db.get(`SELECT * FROM products LIMIT 1`, (err, product) => {
-    if (err || !product) return res.status(500).send("Помилка товару");
+    if (err || !product) return res.status(500).send('Помилка товару');
 
     const total = product.price * qty;
 
     db.run(
       `INSERT INTO orders 
-      (product_id, customer_name, phone, city, address, comment, quantity, total_price)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        (product_id, customer_name, phone, city, address, comment, quantity, total_price) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [product.id, name, phone, city, address, comment, qty, total],
-      function (err2) {
-        if (err2) return res.status(500).send("Помилка замовлення");
 
-        res.render("success", { orderId: this.lastID });
+      function (err2) {
+        if (err2) return res.status(500).send('Помилка створення замовлення');
+        res.render('success', { orderId: this.lastID });
       }
     );
   });
 });
 
-// ===== АВТОРИЗАЦІЯ АДМІНА =====
+// ==============================
+//         АДМІН-ПАНЕЛЬ
+// ==============================
+
+// --- Сторінка логіну ---
+app.get('/admin/login', (req, res) => {
+  res.render('admin/login', { error: null });
+});
+
+// --- Обробка логіну ---
 app.post('/admin/login', (req, res) => {
-  console.log("\n===== LOGIN ATTEMPT =====");
-  console.log("BODY:", req.body);
+  const { username, password } = req.body;
 
-  const username = req.body.username?.trim();
-  const password = req.body.password?.trim();
+  const USER = process.env.ADMIN_USER;
+  const PASS = process.env.ADMIN_PASS;
 
-  console.log("Form username =", username);
-  console.log("Form password =", password);
-  console.log("ENV ADMIN_USER =", process.env.ADMIN_USER);
-  console.log("ENV ADMIN_PASS =", process.env.ADMIN_PASS);
-
-  // ------- ГОЛОВНА ПЕРЕВІРКА -------
-  if (
-    username === process.env.ADMIN_USER &&
-    password === process.env.ADMIN_PASS
-  ) {
-    console.log(">>> LOGIN SUCCESS!");
+  if (username === USER && password === PASS) {
     req.session.isAdmin = true;
     return res.redirect('/admin');
   }
 
-  console.log(">>> LOGIN FAILED!");
-  return res.render('admin/login', { error: "Невірний логін або пароль" });
+  res.render('admin/login', { error: 'Невірний логін або пароль' });
 });
 
-
-// ===== Вихід =====
+// --- Вихід ---
 app.get('/admin/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/admin/login'));
 });
 
-// ===== Сторінка замовлень =====
+// --- Головна адмін-панелі — список замовлень ---
 app.get('/admin', requireAdmin, (req, res) => {
   db.all(
     `SELECT id, customer_name, phone, total_price, status, created_at
      FROM orders ORDER BY created_at DESC`,
     (err, orders) => {
-      if (err) return res.status(500).send("Помилка бази даних");
+      if (err) return res.status(500).send('Помилка бази даних');
       res.render('admin/dashboard', { orders });
     }
   );
 });
 
-// ===== Деталі замовлення =====
+// --- Сторінка одного замовлення ---
 app.get('/admin/order/:id', requireAdmin, (req, res) => {
   const id = req.params.id;
-
   db.get(
     `SELECT o.*, p.name AS product_name
      FROM orders o
-     JOIN products p ON p.id = o.product_id
+     JOIN products p ON o.product_id = p.id
      WHERE o.id = ?`,
     [id],
     (err, order) => {
-      if (err || !order) return res.status(404).send("Замовлення не знайдено");
+      if (!order) return res.status(404).send('Замовлення не знайдено');
       res.render('admin/order', { order });
     }
   );
 });
 
-// ===== Оновлення статусу =====
+// --- Оновлення статусу ---
 app.post('/admin/order/:id/status', requireAdmin, (req, res) => {
-  const { status } = req.body;
   const id = req.params.id;
+  const { status } = req.body;
 
-  db.run(
-    `UPDATE orders SET status = ? WHERE id = ?`,
-    [status, id],
-    (err) => {
-      if (err) return res.status(500).send("Помилка оновлення статусу");
-      res.redirect('/admin/order/' + id);
-    }
-  );
+  db.run(`UPDATE orders SET status = ? WHERE id = ?`, [status, id], (err) => {
+    if (err) return res.status(500).send('Помилка оновлення статусу');
+    res.redirect('/admin/order/' + id);
+  });
 });
 
-// ==================================================
-//                 ЗАПУСК СЕРВЕРА
-// ==================================================
+// ==============================
+//         ЗАПУСК СЕРВЕРА
+// ==============================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Сервер запущено: http://localhost:${PORT}`);
+  console.log('---------------------------------------');
+  console.log(`Сервер запущено на порту ${PORT}`);
+  console.log('ENV USER:', process.env.ADMIN_USER);
+  console.log('ENV PASS:', process.env.ADMIN_PASS);
+  console.log('---------------------------------------');
 });
