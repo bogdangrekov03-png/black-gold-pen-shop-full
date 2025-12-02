@@ -93,35 +93,31 @@ app.post('/order', (req, res) => {
   });
 });
 
-// =====================================
-//               АДМІН-ПАНЕЛЬ
-// =====================================
-
-// Логін
-app.get('/admin/login', (req, res) => {
-  res.render('admin/login', { error: null });
-});
-
+// ====== АВТОРИЗАЦІЯ АДМІНА ======
 app.post('/admin/login', (req, res) => {
-  const username = req.body.username || req.body.login;
-  const password = req.body.password || req.body.pass;
 
-  console.log("=== DEBUG LOGIN ===");
-  console.log("Form username:", username);
-  console.log("Form password:", password);
-  console.log("ENV username:", process.env.ADMIN_USER);
-  console.log("ENV password:", process.env.ADMIN_PASS);
+  console.log("\n===== LOGIN ATTEMPT =====");
+  console.log("BODY:", req.body);
 
-  if (
-    username === process.env.ADMIN_USER &&
-    password === process.env.ADMIN_PASS
-  ) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  console.log("username =", username);
+  console.log("password =", password);
+  console.log("ENV ADMIN_USER =", process.env.ADMIN_USER);
+  console.log("ENV ADMIN_PASS =", process.env.ADMIN_PASS);
+
+  // --- Перевірка логіна та пароля ---
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+    console.log(">>> LOGIN SUCCESS!");
     req.session.isAdmin = true;
     return res.redirect('/admin');
   }
 
-  res.render('admin/login', { error: 'Невірний логін або пароль' });
+  console.log(">>> LOGIN FAILED!");
+  return res.render('admin/login', { error: 'Невірний логін або пароль' });
 });
+
 
 
 // Вихід
