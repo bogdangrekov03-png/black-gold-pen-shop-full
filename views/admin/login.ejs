@@ -1,25 +1,38 @@
-// ====== АВТОРИЗАЦІЯ АДМІНА ======
-app.post('/admin/login', (req, res) => {
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Вхід в адмін-панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="page-wrapper">
+  <main class="login-form">
+    <h1 class="hero-title" style="margin-bottom: 12px; font-size: 22px;">
+      Адмін-панель
+    </h1>
+    <p class="hero-desc" style="margin-bottom: 18px;">
+      Введіть облікові дані для доступу до списку замовлень.
+    </p>
 
-  console.log("\n===== LOGIN ATTEMPT =====");
-  console.log("BODY:", req.body);
-
-  const username = req.body.username;
-  const password = req.body.password;
-
-  console.log("username =", username);
-  console.log("password =", password);
-  console.log("ENV ADMIN_USER =", process.env.ADMIN_USER);
-  console.log("ENV ADMIN_PASS =", process.env.ADMIN_PASS);
-
-  // --- Перевірка логіна та пароля ---
-  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
-    console.log(">>> LOGIN SUCCESS!");
-
-    req.session.isAdmin = true;   // встановлюємо сесію
-    return res.redirect('/admin'); // переходимо в адмінку
-  }
-
-  console.log(">>> LOGIN FAILED!");
-  return res.render('admin/login', { error: 'Невірний логін або пароль' });
-});
+    <div class="admin-card">
+      <% if (error) { %>
+        <div class="login-error"><%= error %></div>
+      <% } %>
+      <form method="post" action="/admin/login" class="order-form">
+        <div>
+          <label for="username">Логін</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+        <div>
+          <label for="password">Пароль</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button class="btn-primary" type="submit">Увійти</button>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>
