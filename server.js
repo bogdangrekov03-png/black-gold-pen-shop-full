@@ -18,11 +18,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: 'super-secret-key',
+    secret: process.env.SESSION_SECRET || 'super-secret-key',
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: false,      // на Render HTTP → має бути false
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24 // 1 день
+    }
   })
 );
+
 
 // ======= Middleware для адміна =======
 function requireAdmin(req, res, next) {
