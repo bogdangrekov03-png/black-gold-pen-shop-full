@@ -1,5 +1,7 @@
+// ====== АВТОРИЗАЦІЯ АДМІНА ======
 app.post('/admin/login', (req, res) => {
-  console.log("=== LOGIN ATTEMPT ===");
+
+  console.log("\n===== LOGIN ATTEMPT =====");
   console.log("BODY:", req.body);
 
   const username = req.body.username;
@@ -10,12 +12,14 @@ app.post('/admin/login', (req, res) => {
   console.log("ENV ADMIN_USER =", process.env.ADMIN_USER);
   console.log("ENV ADMIN_PASS =", process.env.ADMIN_PASS);
 
+  // --- Перевірка логіна та пароля ---
   if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
     console.log(">>> LOGIN SUCCESS!");
-    req.session.isAdmin = true;
-    return res.redirect('/admin');
+
+    req.session.isAdmin = true;   // встановлюємо сесію
+    return res.redirect('/admin'); // переходимо в адмінку
   }
 
   console.log(">>> LOGIN FAILED!");
-  res.render('admin/login', { error: 'Невірний логін або пароль' });
+  return res.render('admin/login', { error: 'Невірний логін або пароль' });
 });
