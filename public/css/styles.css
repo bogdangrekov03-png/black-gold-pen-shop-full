@@ -1,0 +1,479 @@
+:root {
+  --bg-main: #050507;
+  --bg-card: #0c0c10;
+  --bg-card-soft: #101018;
+  --gold: #d4af37;
+  --gold-soft: #f1d97a;
+  --text-main: #f5f5f5;
+  --text-muted: #a0a0a0;
+  --danger: #ff4b4b;
+  --success: #3fbf74;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #202020 0%, #050507 50%, #000 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+/* ==== Головний контейнер ==== */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  backdrop-filter: blur(10px);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.9),
+    rgba(10, 10, 14, 0.9)
+  );
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.nav-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--gold-soft);
+}
+
+/* ==== Hero блок ==== */
+
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 48px;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 32px;
+}
+
+/* ==== Ліва частина (текст) ==== */
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.hero-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold-soft);
+}
+
+.hero-title {
+  font-size: clamp(32px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero-title span {
+  color: var(--gold);
+}
+
+.hero-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 420px;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.hero-badge {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 245, 245, 0.15);
+  color: var(--text-muted);
+}
+
+.hero-badge strong {
+  color: var(--gold-soft);
+}
+
+/* ==== Права частина (картка товару) ==== */
+
+.product-card {
+  background: radial-gradient(circle at top, #262018 0%, #101018 55%, #07070a 100%);
+  border-radius: 20px;
+  padding: 18px 18px 20px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 60%);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.product-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+}
+
+.product-image-wrap {
+  margin: 10px 0 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.product-image-wrap img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 260px;
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.price-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-soft);
+}
+
+.price-note {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.stock-pill {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(63, 191, 116, 0.16);
+  color: var(--success);
+  border: 1px solid rgba(63, 191, 116, 0.4);
+}
+
+/* ==== Форма ==== */
+
+.order-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row > div {
+  flex: 1;
+}
+
+label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: block;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  background: rgba(7, 7, 10, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: var(--text-main);
+  font-size: 13px;
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--gold-soft);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.4);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Кількість + кнопка */
+
+.form-footer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.qty-input {
+  max-width: 80px;
+}
+
+.btn-primary {
+  flex: 1;
+  border-radius: 999px;
+  border: none;
+  padding: 11px 16px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, #d4af37, #f1d97a);
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.5);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 0 22px rgba(212, 175, 55, 0.7);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* ====== Footer ====== */
+
+.footer {
+  padding: 10px 20px 16px;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer span {
+  opacity: 0.9;
+}
+
+/* ====== Технічні стилі для адмінки ====== */
+
+.admin-page {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 16px 32px;
+}
+
+.admin-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-title small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.admin-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 16px 18px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-status {
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.status-new {
+  background: rgba(255, 196, 87, 0.16);
+  color: #ffc457;
+  border: 1px solid rgba(255, 196, 87, 0.6);
+}
+
+.status-confirmed {
+  background: rgba(63, 191, 116, 0.16);
+  color: var(--success);
+  border: 1px solid rgba(63, 191, 116, 0.6);
+}
+
+.status-sent {
+  background: rgba(153, 185, 255, 0.16);
+  color: #99b9ff;
+  border: 1px solid rgba(153, 185, 255, 0.6);
+}
+
+a.link {
+  color: var(--gold-soft);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+a.link:hover {
+  text-decoration: underline;
+}
+
+/* Форма логіна */
+
+.login-form {
+  max-width: 360px;
+  margin: 80px auto;
+}
+
+.login-error {
+  font-size: 12px;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+
+.btn-secondary {
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  background: transparent;
+  color: var(--gold-soft);
+  cursor: pointer;
+}
+
+/* Адаптив */
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 24px;
+  }
+
+  .hero-text {
+    order: 1;
+  }
+
+  .product-card {
+    order: 2;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+}

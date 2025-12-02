@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Замовлення прийнято</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="page-wrapper">
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-title">BLACK & GOLD</div>
+      <div class="brand-sub">Дякуємо за замовлення</div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="hero-inner">
+      <section class="hero-text">
+        <div class="hero-label">Order received</div>
+        <h1 class="hero-title">
+          Ваше замовлення №<span><%= orderId %></span> прийнято.
+        </h1>
+        <p class="hero-desc">
+          Найближчим часом ми зв’яжемося з вами для підтвердження деталей.
+          На ваш номер буде відправлено SMS-підтвердження (якщо правильно вказаний).
+        </p>
+        <div class="hero-badges">
+          <div class="hero-badge">Зазвичай зв'язуємося протягом <strong>15–60 хвилин</strong></div>
+          <div class="hero-badge">Дякуємо, що обираєте <strong>Black & Gold</strong></div>
+        </div>
+      </section>
+
+      <section class="product-card">
+        <div class="product-header">
+          <div>
+            <div class="product-label">Що далі?</div>
+            <div class="product-title">Коротко про етапи</div>
+          </div>
+        </div>
+
+        <div class="hero-badges" style="margin-top: 6px;">
+          <div class="hero-badge"><strong>1.</strong> Ми телефонуємо вам</div>
+          <div class="hero-badge"><strong>2.</strong> Підтверджуємо адресу доставки</div>
+          <div class="hero-badge"><strong>3.</strong> Відправляємо посилку</div>
+          <div class="hero-badge"><strong>4.</strong> Ви отримуєте та оплачуєте</div>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <a href="/" class="link">Повернутися на головну</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© <%= new Date().getFullYear() %> Black & Gold Pen</span>
+  </footer>
+</div>
+</body>
+</html>

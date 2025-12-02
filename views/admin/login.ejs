@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Вхід в адмін-панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="page-wrapper">
+  <main class="login-form">
+    <h1 class="hero-title" style="margin-bottom: 12px; font-size: 22px;">
+      Адмін-панель
+    </h1>
+    <p class="hero-desc" style="margin-bottom: 18px;">
+      Введіть облікові дані для доступу до списку замовлень.
+    </p>
+
+    <div class="admin-card">
+      <% if (error) { %>
+        <div class="login-error"><%= error %></div>
+      <% } %>
+      <form method="post" action="/admin/login" class="order-form">
+        <div>
+          <label for="username">Логін</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+        <div>
+          <label for="password">Пароль</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button class="btn-primary" type="submit">Увійти</button>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

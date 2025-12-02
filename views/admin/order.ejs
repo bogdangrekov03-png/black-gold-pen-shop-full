@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Замовлення #<%= order.id %> – Адмін</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="navbar">
+  <div class="brand">
+    <div class="brand-title">ADMIN</div>
+    <div class="brand-sub">Замовлення #<%= order.id %></div>
+  </div>
+  <div>
+    <a class="link" href="/admin">До списку</a> •
+    <a class="link" href="/admin/logout">Вийти</a>
+  </div>
+</header>
+
+<main class="admin-page">
+  <div class="admin-title">
+    <div>Замовлення #<%= order.id %></div>
+    <small><%= order.created_at %></small>
+  </div>
+
+  <div class="admin-card">
+    <p style="font-size:13px;margin-bottom:10px;">
+      <strong>Клієнт:</strong> <%= order.customer_name %><br/>
+      <strong>Телефон:</strong> <%= order.phone %><br/>
+      <strong>Місто:</strong> <%= order.city || '-' %><br/>
+      <strong>Адреса / Відділення:</strong> <%= order.address || '-' %><br/>
+      <strong>Коментар:</strong> <%= order.comment || '-' %><br/>
+    </p>
+
+    <p style="font-size:13px;margin-bottom:10px;">
+      <strong>Товар:</strong> <%= order.product_name %><br/>
+      <strong>Кількість:</strong> <%= order.quantity %><br/>
+      <strong>Всього:</strong> <%= order.total_price %> грн
+    </p>
+
+    <form method="post" action="/admin/order/<%= order.id %>/status" class="order-form" style="margin-top:14px;">
+      <div>
+        <label for="status">Статус замовлення</label>
+        <select id="status" name="status">
+          <option value="new" <%= order.status === 'new' ? 'selected' : '' %>>new</option>
+          <option value="confirmed" <%= order.status === 'confirmed' ? 'selected' : '' %>>confirmed</option>
+          <option value="sent" <%= order.status === 'sent' ? 'selected' : '' %>>sent</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-secondary" style="margin-top:8px;">Оновити статус</button>
+    </form>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Замовлення – Адмін</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<header class="navbar">
+  <div class="brand">
+    <div class="brand-title">ADMIN</div>
+    <div class="brand-sub">Панель замовлень</div>
+  </div>
+  <div>
+    <a class="link" href="/">На сайт</a> •
+    <a class="link" href="/admin/logout">Вийти</a>
+  </div>
+</header>
+
+<main class="admin-page">
+  <div class="admin-title">
+    <div>Усі замовлення</div>
+  </div>
+  <div class="admin-card">
+    <% if (!orders || orders.length === 0) { %>
+      <p style="font-size: 13px; color: var(--text-muted);">
+        Поки що немає жодного замовлення.
+      </p>
+    <% } else { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Клієнт</th>
+            <th>Телефон</th>
+            <th>Сума</th>
+            <th>Статус</th>
+            <th>Створено</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% orders.forEach(function(o) { %>
+          <tr>
+            <td><a class="link" href="/admin/order/<%= o.id %>">#<%= o.id %></a></td>
+            <td><%= o.customer_name %></td>
+            <td><%= o.phone %></td>
+            <td><%= o.total_price %> грн</td>
+            <td>
+              <span class="admin-status 
+                <%= o.status === 'new' ? 'status-new' : 
+                    o.status === 'confirmed' ? 'status-confirmed' : 
+                    o.status === 'sent' ? 'status-sent' : '' %>">
+                <%= o.status %>
+              </span>
+            </td>
+            <td><%= o.created_at %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+</main>
+</body>
+</html>
