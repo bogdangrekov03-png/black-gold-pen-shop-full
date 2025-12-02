@@ -78,37 +78,33 @@ app.post('/order', (req, res) => {
   });
 });
 
-// ==================================================
-//               АДМІН-ПАНЕЛЬ
-// ==================================================
-
-// ===== GET: показати форму логіну =====
-app.get('/admin/login', (req, res) => {
-  res.render('admin/login', { error: null });
-});
-
-// ===== POST: авторизація =====
+// ===== АВТОРИЗАЦІЯ АДМІНА =====
 app.post('/admin/login', (req, res) => {
   console.log("\n===== LOGIN ATTEMPT =====");
   console.log("BODY:", req.body);
 
-  const username = req.body.username;
-  const password = req.body.password;
+  const username = req.body.username?.trim();
+  const password = req.body.password?.trim();
 
   console.log("Form username =", username);
   console.log("Form password =", password);
   console.log("ENV ADMIN_USER =", process.env.ADMIN_USER);
   console.log("ENV ADMIN_PASS =", process.env.ADMIN_PASS);
 
-  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+  // ------- ГОЛОВНА ПЕРЕВІРКА -------
+  if (
+    username === process.env.ADMIN_USER &&
+    password === process.env.ADMIN_PASS
+  ) {
     console.log(">>> LOGIN SUCCESS!");
     req.session.isAdmin = true;
     return res.redirect('/admin');
   }
 
   console.log(">>> LOGIN FAILED!");
-  res.render('admin/login', { error: "Невірний логін або пароль" });
+  return res.render('admin/login', { error: "Невірний логін або пароль" });
 });
+
 
 // ===== Вихід =====
 app.get('/admin/logout', (req, res) => {
