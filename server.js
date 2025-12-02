@@ -47,6 +47,9 @@ app.get('/', (req, res) => {
     res.render('index', { product });
   });
 });
+console.log("=== DEBUG ENV VARS ===");
+console.log("ADMIN_USER =", process.env.ADMIN_USER);
+console.log("ADMIN_PASS =", process.env.ADMIN_PASS);
 
 // Обробка замовлення
 app.post('/order', (req, res) => {
