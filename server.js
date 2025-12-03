@@ -78,25 +78,35 @@ app.post('/order', (req, res) => {
 //         АДМІН-ПАНЕЛЬ
 // ==============================
 
-// --- Сторінка логіну ---
-app.get('/admin/login', (req, res) => {
-  res.render('admin/login', { error: null });
-});
-
 // --- Обробка логіну ---
 app.post('/admin/login', (req, res) => {
+
+  // 🔍 ЛОГУЄМО ВСЕ, ЩО ПРИХОДИТЬ З ФОРМИ
+  console.log("====================================");
+  console.log("FORM BODY:", req.body);
+  console.log("USERNAME RECEIVED:", req.body.username);
+  console.log("PASSWORD RECEIVED:", req.body.password);
+
   const { username, password } = req.body;
 
   const USER = process.env.ADMIN_USER;
   const PASS = process.env.ADMIN_PASS;
 
+  console.log("ENV USER:", USER);
+  console.log("ENV PASS:", PASS);
+  console.log("====================================");
+
+  // 🔐 ПЕРЕВІРКА ЛОГІНУ
   if (username === USER && password === PASS) {
     req.session.isAdmin = true;
+    console.log("LOGIN SUCCESS → redirect to /admin");
     return res.redirect('/admin');
   }
 
+  console.log("LOGIN FAILED → wrong username or password");
   res.render('admin/login', { error: 'Невірний логін або пароль' });
 });
+
 
 // --- Вихід ---
 app.get('/admin/logout', (req, res) => {
